@@ -1,0 +1,12 @@
+Overview: Il gioco che vorrei realizzare sarebbe un TPS, dove il giocatore deve procedere in un livello realizzato da me
+
+Features: Il giocatore può usare più armi, ha dei nemici che può affrontare & può interagire con alcuni oggetti
+
+Timeline:
+
+-Febbraio: Sistema di muovimento & prototipo iniziale per sparo
+-Marzo: Script universale per personaggi che gestisce vita, velocità di muovimento, altezza salto etc..
+-Aprile: AI nemica che spara, insegue il giocatore e muore
+-Maggio: Armi aggiuntive (probabilmente con spray differenti) e metodo per switchare tra di esse (probabilmente con HUD)
+-Giugno: Dare la possibilità al giocatore di interagire con gli oggetti intorno ad esso (esempio: scale, pulsanti, porte)
+-Luglio: Creazione di un livello prova & bugfixing 
