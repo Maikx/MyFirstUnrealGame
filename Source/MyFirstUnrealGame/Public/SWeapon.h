@@ -6,6 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "SWeapon.generated.h"
 
+class USkeletalMeshComponent;
+class UDamageType;
+
 UCLASS()
 class MYFIRSTUNREALGAME_API ASWeapon : public AActor
 {
@@ -24,6 +27,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	void Fire();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+	TSubclassOf<UDamageType> DamageType;
 
 public:	
 	// Called every frame
