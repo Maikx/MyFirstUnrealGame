@@ -9,6 +9,7 @@
 class UCameraComponent;
 class USpringArmComponent;
 class ASWeapon;
+class USCharacterComponent;
 
 UCLASS()
 class MYFIRSTUNREALGAME_API ASCharacter : public ACharacter
@@ -36,6 +37,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 		USpringArmComponent* SpringArmComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+		USCharacterComponent* CharacterComp;
 
 	ASWeapon* CurrentWeapon;
 

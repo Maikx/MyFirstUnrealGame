@@ -5,6 +5,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "SCharacterComponent.h"
 #include "SWeapon.h"
 
 // Sets default values
@@ -16,6 +17,8 @@ ASCharacter::ASCharacter()
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
 	SpringArmComp->bUsePawnControlRotation = true;
 	SpringArmComp->SetupAttachment(RootComponent);
+
+	CharacterComp = CreateDefaultSubobject<USCharacterComponent>(TEXT("CharacterComp"));
 
 	GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
 
