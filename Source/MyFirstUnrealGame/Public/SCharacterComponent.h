@@ -6,7 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "SCharacterComponent.generated.h"
 
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_SixParams(FOnHealthChangedSignature, USCharacterComponent*, OwningHealthComp, float, Health, float, HealthDelta, const class UDamageType*, DamageType, class AController*, InstigatedBy, AActor*, DamageCauser);
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MYFIRSTUNREALGAME_API USCharacterComponent : public UActorComponent
 {
@@ -23,6 +23,14 @@ protected:
 	bool bIsDead;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HealthComponent")
+		float Health;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HealthComponent")
 		float DefaultHealth;
+
+	UFUNCTION()
+		void HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 public:	
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+		FOnHealthChangedSignature OnHealthChanged;
 };
