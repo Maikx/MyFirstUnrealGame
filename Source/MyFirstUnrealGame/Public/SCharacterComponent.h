@@ -16,6 +16,9 @@ public:
 	// Sets default values for this component's properties
 	USCharacterComponent();
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterComponent")
+	uint8 TeamNum;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -33,4 +36,7 @@ protected:
 public:	
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 		FOnHealthChangedSignature OnHealthChanged;
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "CharacterComponent")
+		static bool IsFriendly(AActor* ActorA, AActor* ActorB);
 };

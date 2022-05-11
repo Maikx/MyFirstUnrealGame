@@ -8,6 +8,8 @@ USCharacterComponent::USCharacterComponent()
 {
 	DefaultHealth = 100;
 	bIsDead = false;
+
+	TeamNum = 2;
 }
 
 
@@ -15,6 +17,8 @@ USCharacterComponent::USCharacterComponent()
 void USCharacterComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	Health = DefaultHealth;
 }
 
 void USCharacterComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy,
@@ -25,7 +29,7 @@ void USCharacterComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damag
 		return;
 	}
 
-	if (DamageCauser != DamagedActor)
+	if (DamageCauser != DamagedActor && IsFriendly(DamagedActor, DamageCauser))
 	{
 		return;
 	}
@@ -41,7 +45,25 @@ void USCharacterComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damag
 
 	if (bIsDead)
 	{
-		//The Heavy is dead
+		UE_LOG(LogTemp, Warning, TEXT("Is Dead"));
 	}
+}
+
+bool USCharacterComponent::IsFriendly(AActor* ActorA, AActor* ActorB)
+{
+	if (ActorA == nullptr || ActorB == nullptr)
+	{
+		return true;
+	}
+
+	USCharacterComponent* HealthCompA = Cast<USCharacterComponent>(ActorA->GetComponentByClass(USCharacterComponent::StaticClass()));
+	USCharacterComponent* HealthCompB = Cast<USCharacterComponent>(ActorB->GetComponentByClass(USCharacterComponent::StaticClass()));
+
+	if (HealthCompA == nullptr || HealthCompB == nullptr)
+	{
+		return true;
+	}
+
+	return HealthCompA->TeamNum == HealthCompB->TeamNum;
 }
 
