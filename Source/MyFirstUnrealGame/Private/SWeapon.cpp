@@ -9,6 +9,7 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "PhysicalMaterials/PhysicalMaterial.h"
 #include "MyFirstUnrealGame/MyFirstUnrealGame.h"
+#include "TimerManager.h"
 
 // Sets default values
 ASWeapon::ASWeapon()
@@ -43,8 +44,9 @@ void ASWeapon::Fire()
 		FVector EyeLocation;
 		FRotator EyeRotation;
 		MyOwner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
+
 		FVector ShotDirection = EyeRotation.Vector();
-		
+
 		// Bullet Spread
 		float HalfRad = FMath::DegreesToRadians(BulletSpread);
 		ShotDirection = FMath::VRandCone(ShotDirection, HalfRad, HalfRad);
@@ -60,39 +62,22 @@ void ASWeapon::Fire()
 		// Particle "Target" parameter
 		FVector TracerEndPoint = TraceEnd;
 
-		EPhysicalSurface SurfaceType = SurfaceType_Default;
-
 		FHitResult Hit;
 		if (GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, COLLISION_WEAPON, QueryParams))
 		{
 			// Blocking hit! Process damage
 			AActor* HitActor = Hit.GetActor();
 
-			//SurfaceType = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());
-
 			float ActualDamage = BaseDamage;
-			if (SurfaceType == SURFACE_FLESHVULNERABLE)
-			{
-				ActualDamage *= 4.0f;
-			}
 
 			UGameplayStatics::ApplyPointDamage(HitActor, ActualDamage, ShotDirection, Hit, MyOwner->GetInstigatorController(), MyOwner, DamageType);
 
-			PlayImpactEffects(SurfaceType, Hit.ImpactPoint);
+			PlayImpactEffects(Hit.ImpactPoint);
 
 			TracerEndPoint = Hit.ImpactPoint;
-
 		}
-
-		//DrawDebugLine(GetWorld(), EyeLocation, TraceEnd, FColor::White, false, 1.0f, 0, 1.0f);
 
 		PlayFireEffects(TracerEndPoint);
-
-		if (HasAuthority())
-		{
-			HitScanTrace.TraceTo = TracerEndPoint;
-			//HitScanTrace.SurfaceType = SurfaceType;
-		}
 
 		LastFireTime = GetWorld()->TimeSeconds;
 	}
@@ -139,19 +124,11 @@ void ASWeapon::PlayFireEffects(FVector TraceEnd)
 	}
 }
 
-void ASWeapon::PlayImpactEffects(EPhysicalSurface SurfaceType, FVector ImpactPoint)
+void ASWeapon::PlayImpactEffects(FVector ImpactPoint)
 {
 	UParticleSystem* SelectedEffect = nullptr;
-	switch (SurfaceType)
-	{
-	case SURFACE_FLESHDEFAULT:
-	case SURFACE_FLESHVULNERABLE:
-		SelectedEffect = FleshImpactEffect;
-		break;
-	default:
-		SelectedEffect = DefaultImpactEffect;
-		break;
-	}
+
+	SelectedEffect = DefaultImpactEffect;
 
 	if (SelectedEffect)
 	{

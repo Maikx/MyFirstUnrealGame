@@ -10,20 +10,6 @@ class USkeletalMeshComponent;
 class UDamageType;
 class UParticleSystem;
 
-USTRUCT()
-struct FHitScanTrace
-{
-	GENERATED_BODY()
-
-public:
-
-	//UPROPERTY()
-		//TEnumAsByte<EPhysicalSurface> SurfaceType;
-
-	UPROPERTY()
-		FVector_NetQuantize TraceTo;
-};
-
 UCLASS()
 class MYFIRSTUNREALGAME_API ASWeapon : public AActor
 {
@@ -37,26 +23,15 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-	float BaseDamage;
-
-	/* RPM - Bullets per minute fired by weapon */
-	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-	float RateOfFire;
-
-	/* Bullet Spread in Degrees */
-	UPROPERTY(EditDefaultsOnly, Category = "Weapon", meta = (ClampMin = 0.0f))
-		float BulletSpread;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	USkeletalMeshComponent* MeshComp;
+		USkeletalMeshComponent* MeshComp;
 
 	void PlayFireEffects(FVector TraceEnd);
 
-	void PlayImpactEffects(EPhysicalSurface SurfaceType, FVector ImpactPoint);
+	void PlayImpactEffects(FVector ImpactPoint);
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
-	TSubclassOf<UDamageType> DamageType;
+		TSubclassOf<UDamageType> DamageType;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 		FName MuzzleSocketName;
@@ -71,25 +46,30 @@ protected:
 		UParticleSystem* DefaultImpactEffect;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
-		UParticleSystem* FleshImpactEffect;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 		UParticleSystem* TracerEffect;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 		TSubclassOf<UCameraShakeBase> FireCamShake;
 
-	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+		float BaseDamage;
+
 	void Fire();
 
 	FTimerHandle TimerHandle_TimeBetweenShots;
 
 	float LastFireTime;
 
+	/* RPM - Bullets per minute fired by weapon */
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+		float RateOfFire;
+
+	/* Bullet Spread in Degrees */
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon", meta = (ClampMin = 0.0f))
+		float BulletSpread;
+
 	// Derived from RateOfFire
 	float TimeBetweenShots;
-
-	FHitScanTrace HitScanTrace;
 
 public:	
 	void StartFire();

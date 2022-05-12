@@ -2,6 +2,7 @@
 
 
 #include "SCharacterComponent.h"
+#include "SGameMode.h"
 
 // Sets default values for this component's properties
 USCharacterComponent::USCharacterComponent()
@@ -9,7 +10,7 @@ USCharacterComponent::USCharacterComponent()
 	DefaultHealth = 100;
 	bIsDead = false;
 
-	TeamNum = 2;
+	TeamNum = 1;
 }
 
 
@@ -17,6 +18,13 @@ USCharacterComponent::USCharacterComponent()
 void USCharacterComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	AActor* MyOwner = GetOwner();
+	if (MyOwner)
+	{
+		MyOwner->OnTakeAnyDamage.AddDynamic(this, &USCharacterComponent::HandleTakeAnyDamage);
+	}
+	
 
 	Health = DefaultHealth;
 }
@@ -45,8 +53,13 @@ void USCharacterComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damag
 
 	if (bIsDead)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Is Dead"));
+		ASGameMode* GM = Cast<ASGameMode>(GetWorld()->GetAuthGameMode());
+		if (GM)
+		{
+			GM->OnActorKilled.Broadcast(GetOwner(), DamageCauser, InstigatedBy);
+		}
 	}
+
 }
 
 bool USCharacterComponent::IsFriendly(AActor* ActorA, AActor* ActorB)
@@ -65,5 +78,10 @@ bool USCharacterComponent::IsFriendly(AActor* ActorA, AActor* ActorB)
 	}
 
 	return HealthCompA->TeamNum == HealthCompB->TeamNum;
+}
+
+float USCharacterComponent::GetHealth() const
+{
+	return Health;
 }
 
