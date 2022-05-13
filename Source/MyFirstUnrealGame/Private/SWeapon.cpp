@@ -11,10 +11,8 @@
 #include "MyFirstUnrealGame/MyFirstUnrealGame.h"
 #include "TimerManager.h"
 
-// Sets default values
 ASWeapon::ASWeapon()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	BaseDamage = 20.0f;
@@ -28,14 +26,14 @@ ASWeapon::ASWeapon()
 	TracerTargetName = "Target";
 }
 
-// Called when the game starts or when spawned
+// Unity's Void Start
 void ASWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 	
 	TimeBetweenShots = 60 / RateOfFire;
 }
-
+// This is called when weapon fires 
 void ASWeapon::Fire()
 {
 	AActor* MyOwner = GetOwner();
@@ -47,7 +45,7 @@ void ASWeapon::Fire()
 
 		FVector ShotDirection = EyeRotation.Vector();
 
-		// Bullet Spread
+		// This simulates the bullet spread
 		float HalfRad = FMath::DegreesToRadians(BulletSpread);
 		ShotDirection = FMath::VRandCone(ShotDirection, HalfRad, HalfRad);
 
@@ -59,13 +57,11 @@ void ASWeapon::Fire()
 		QueryParams.bTraceComplex = true;
 		QueryParams.bReturnPhysicalMaterial = true;
 
-		// Particle "Target" parameter
 		FVector TracerEndPoint = TraceEnd;
 
 		FHitResult Hit;
 		if (GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, COLLISION_WEAPON, QueryParams))
 		{
-			// Blocking hit! Process damage
 			AActor* HitActor = Hit.GetActor();
 
 			float ActualDamage = BaseDamage;
@@ -83,6 +79,7 @@ void ASWeapon::Fire()
 	}
 }
 
+// This is used to add a small delay between shots
 void ASWeapon::StartFire()
 {
 	float FirstDelay = FMath::Max(LastFireTime + TimeBetweenShots - GetWorld()->TimeSeconds, 0.0f);
@@ -90,11 +87,13 @@ void ASWeapon::StartFire()
 	GetWorldTimerManager().SetTimer(TimerHandle_TimeBetweenShots, this, &ASWeapon::Fire, TimeBetweenShots, true, FirstDelay);
 }
 
+// This is used stop the small delay between shots
 void ASWeapon::StopFire()
 {
 	GetWorldTimerManager().ClearTimer(TimerHandle_TimeBetweenShots);
 }
 
+// This is used to play the muzzle & tracer effect of the bullet
 void ASWeapon::PlayFireEffects(FVector TraceEnd)
 {
 	if (MuzzleEffect)
@@ -124,6 +123,7 @@ void ASWeapon::PlayFireEffects(FVector TraceEnd)
 	}
 }
 
+// This plays the bullet impact effect depending on the surface (set to always default)
 void ASWeapon::PlayImpactEffects(FVector ImpactPoint)
 {
 	UParticleSystem* SelectedEffect = nullptr;

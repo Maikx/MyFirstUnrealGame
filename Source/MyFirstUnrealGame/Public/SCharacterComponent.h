@@ -14,17 +14,13 @@ class MYFIRSTUNREALGAME_API USCharacterComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
 	USCharacterComponent();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterComponent")
 	uint8 TeamNum;
 
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
-
-	bool bIsDead;
 
 	UPROPERTY(BlueprintReadOnly, Category = "HealthComponent")
 		float Health;
@@ -34,12 +30,15 @@ protected:
 
 	UFUNCTION()
 		void HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
-public:	
-	float GetHealth() const;
 
+	bool bIsDead;
+
+public:	
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 		FOnHealthChangedSignature OnHealthChanged;
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "CharacterComponent")
 		static bool IsFriendly(AActor* ActorA, AActor* ActorB);
+
+	float GetHealth() const;
 };

@@ -4,17 +4,15 @@
 #include "SCharacterComponent.h"
 #include "SGameMode.h"
 
-// Sets default values for this component's properties
 USCharacterComponent::USCharacterComponent()
 {
 	DefaultHealth = 100;
-	bIsDead = false;
-
 	TeamNum = 1;
+	bIsDead = false;
 }
 
 
-// Called when the game starts
+// Unity's Void Start
 void USCharacterComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -25,10 +23,10 @@ void USCharacterComponent::BeginPlay()
 		MyOwner->OnTakeAnyDamage.AddDynamic(this, &USCharacterComponent::HandleTakeAnyDamage);
 	}
 	
-
 	Health = DefaultHealth;
 }
 
+// This is called when the health value changes
 void USCharacterComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy,
 	AActor* DamageCauser)
 {
@@ -62,6 +60,7 @@ void USCharacterComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damag
 
 }
 
+// This is used to check if two or more actor are on the same team (mostly used by AI)
 bool USCharacterComponent::IsFriendly(AActor* ActorA, AActor* ActorB)
 {
 	if (ActorA == nullptr || ActorB == nullptr)

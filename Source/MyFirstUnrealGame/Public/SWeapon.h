@@ -16,19 +16,19 @@ class MYFIRSTUNREALGAME_API ASWeapon : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	ASWeapon();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-		USkeletalMeshComponent* MeshComp;
+	void Fire();
 
 	void PlayFireEffects(FVector TraceEnd);
 
 	void PlayImpactEffects(FVector ImpactPoint);
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+		USkeletalMeshComponent* MeshComp;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 		TSubclassOf<UDamageType> DamageType;
@@ -54,22 +54,17 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 		float BaseDamage;
 
-	void Fire();
-
-	FTimerHandle TimerHandle_TimeBetweenShots;
-
-	float LastFireTime;
-
-	/* RPM - Bullets per minute fired by weapon */
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 		float RateOfFire;
 
-	/* Bullet Spread in Degrees */
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon", meta = (ClampMin = 0.0f))
 		float BulletSpread;
 
-	// Derived from RateOfFire
+	float LastFireTime;
+
 	float TimeBetweenShots;
+
+	FTimerHandle TimerHandle_TimeBetweenShots;
 
 public:	
 	void StartFire();

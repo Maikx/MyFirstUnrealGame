@@ -17,11 +17,9 @@ class MYFIRSTUNREALGAME_API ASCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	ASCharacter();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	void MoveForward(float AxisVal);
@@ -32,6 +30,10 @@ protected:
 
 	void EndCrouch();
 
+	void BeginZoom();
+
+	void EndZoom();
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 		UCameraComponent* CameraComp;
 
@@ -41,40 +43,33 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 		USCharacterComponent* CharacterComp;
 
-	bool bWantsToZoom;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Player")
-		float ZoomedFOV;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Player", meta = (ClampMin = 0.1, ClampMax = 100))
-		float ZoomInterpSpeed;
-
-	/* Default FOV set during begin play */
-	float DefaultFOV;
-
-	void BeginZoom();
-
-	void EndZoom();
-
-	ASWeapon* CurrentWeapon;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Player")
 		TSubclassOf<ASWeapon> StarterWeaponClass;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Player")
 		FName WeaponAttachSocketName;
 
-	UFUNCTION()
-		void OnHealthChanged(USCharacterComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+	UPROPERTY(EditDefaultsOnly, Category = "Player")
+		float ZoomedFOV;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Player", meta = (ClampMin = 0.1, ClampMax = 100))
+		float ZoomInterpSpeed;
+	
 	UPROPERTY(BlueprintReadOnly, Category = "Player")
 		bool bDied;
 
+	UFUNCTION()
+		void OnHealthChanged(USCharacterComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+
+	ASWeapon* CurrentWeapon;
+
+	bool bWantsToZoom;
+
+	float DefaultFOV;
+
 public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual FVector GetPawnViewLocation() const override;
