@@ -10,6 +10,7 @@
 #include "SCharacterComponent.h"
 #include "SWeapon.h"
 #include "MyFirstUnrealGame\MyFirstUnrealGame.h"
+#include "GenericTeamAgentInterface.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -50,6 +51,10 @@ void ASCharacter::BeginPlay()
 			CurrentWeapon->SetOwner(this);
 			CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponAttachSocketName);
 		}
+	}
+
+	if (CharacterComp) {
+		CharacterComp->OnHealthChanged.AddDynamic(this, &ASCharacter::OnHealthChanged);
 	}
 
 	//Setting the field of view on camera
@@ -99,6 +104,32 @@ void ASCharacter::EndZoom()
 	bWantsToZoom = false;
 }
 
+
+void ASCharacter::SetGenericTeamId(const FGenericTeamId& TeamID)
+{
+
+	teamId = TeamID.GetId();
+}
+
+FGenericTeamId ASCharacter::GetGenericTeamId() const
+{
+	return FGenericTeamId(teamId);
+}
+
+
+ETeamAttitude::Type ASCharacter::GetTeamAttitudeTowards(const AActor& Other) const
+{
+	const IGenericTeamAgentInterface* OtherTeamAgent = Cast<const IGenericTeamAgentInterface>(&Other);
+
+	if (!OtherTeamAgent) {
+		return ETeamAttitude::Neutral;
+	}
+	if (GetGenericTeamId() != OtherTeamAgent->GetGenericTeamId()) {
+		return  ETeamAttitude::Hostile;
+	}
+	return  ETeamAttitude::Neutral;
+}
+
 void ASCharacter::StartFire()
 {
 	if (CurrentWeapon)
@@ -127,6 +158,9 @@ void ASCharacter::OnHealthChanged(USCharacterComponent* OwningHealthComp, float 
 
 		GetMovementComponent()->StopMovementImmediately();
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics)
+		GetMesh()->SetCollisionResponseToAllChannels(ECR_Block);
+		GetMesh()->SetSimulatePhysics(true);
 
 		DetachFromControllerPendingDestroy();
 

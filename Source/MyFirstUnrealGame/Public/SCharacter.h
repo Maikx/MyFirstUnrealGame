@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "GenericTeamAgentInterface.h"
 #include "SCharacter.generated.h"
 
 class UCameraComponent;
@@ -12,7 +13,8 @@ class ASWeapon;
 class USCharacterComponent;
 
 UCLASS()
-class MYFIRSTUNREALGAME_API ASCharacter : public ACharacter
+class MYFIRSTUNREALGAME_API ASCharacter : public ACharacter,
+										  public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -33,6 +35,17 @@ protected:
 	void BeginZoom();
 
 	void EndZoom();
+
+	/** Assigns Team Agent to given TeamID */
+	virtual void SetGenericTeamId(const FGenericTeamId& TeamID) override;
+
+	/** Retrieve team identifier in form of FGenericTeamId */
+	virtual FGenericTeamId GetGenericTeamId() const override; 
+	/** Retrieved owner attitude toward given Other object */
+	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Teams")
+	uint8 teamId;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 		UCameraComponent* CameraComp;
