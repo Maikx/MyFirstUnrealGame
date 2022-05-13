@@ -158,7 +158,7 @@ void ASCharacter::OnHealthChanged(USCharacterComponent* OwningHealthComp, float 
 
 		GetMovementComponent()->StopMovementImmediately();
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics)
+		GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 		GetMesh()->SetCollisionResponseToAllChannels(ECR_Block);
 		GetMesh()->SetSimulatePhysics(true);
 
