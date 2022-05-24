@@ -24,6 +24,10 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	void SwitchNextWeapon();
+
+	void SwitchPreviousWeapon();
+
 	void MoveForward(float AxisVal);
 
 	void MoveRight(float AxisVal);
@@ -56,8 +60,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 		USCharacterComponent* CharacterComp;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Player")
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 		TSubclassOf<ASWeapon> StarterWeaponClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+		TSubclassOf<ASWeapon> SecondWeaponClass;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Player")
 		FName WeaponAttachSocketName;
@@ -75,6 +82,9 @@ protected:
 		void OnHealthChanged(USCharacterComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 	ASWeapon* CurrentWeapon;
+
+	int32 WeaponIndex;
+	TArray<ASWeapon*> WeaponArray;
 
 	bool bWantsToZoom;
 

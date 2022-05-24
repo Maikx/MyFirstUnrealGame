@@ -17,6 +17,7 @@ ASWeapon::ASWeapon()
 
 	BaseDamage = 20.0f;
 	BulletSpread = 2.0f;
+	BulletQuantity = 1;
 	RateOfFire = 600;
 
 	MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshComp"));
@@ -36,6 +37,8 @@ void ASWeapon::BeginPlay()
 // This is called when weapon fires 
 void ASWeapon::Fire()
 {
+	for (int i = 0; i < BulletQuantity; i++)
+	{
 	AActor* MyOwner = GetOwner();
 	if (MyOwner)
 	{
@@ -77,13 +80,13 @@ void ASWeapon::Fire()
 
 		LastFireTime = GetWorld()->TimeSeconds;
 	}
+	}
 }
 
 // This is used to add a small delay between shots
 void ASWeapon::StartFire()
 {
 	float FirstDelay = FMath::Max(LastFireTime + TimeBetweenShots - GetWorld()->TimeSeconds, 0.0f);
-
 	GetWorldTimerManager().SetTimer(TimerHandle_TimeBetweenShots, this, &ASWeapon::Fire, TimeBetweenShots, true, FirstDelay);
 }
 

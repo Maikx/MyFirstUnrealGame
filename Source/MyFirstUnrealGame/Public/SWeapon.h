@@ -60,6 +60,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon", meta = (ClampMin = 0.0f))
 		float BulletSpread;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+		int BulletQuantity;
+
 	float LastFireTime;
 
 	float TimeBetweenShots;
@@ -70,4 +73,6 @@ public:
 	void StartFire();
 
 	void StopFire();
+
+	class USkeletalMeshComponent* GetWeaponMesh() {return MeshComp;}
 };
