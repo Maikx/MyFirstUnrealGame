@@ -11,6 +11,7 @@
 #include "SWeapon.h"
 #include "MyFirstUnrealGame\MyFirstUnrealGame.h"
 #include "GenericTeamAgentInterface.h"
+#include "Blueprint/UserWidget.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -64,6 +65,16 @@ void ASCharacter::BeginPlay()
 
 	if (CharacterComp) {
 		CharacterComp->OnHealthChanged.AddDynamic(this, &ASCharacter::OnHealthChanged);
+	}
+
+	if (IsValid(CrossHairClass))
+	{
+		CrossHair = Cast<UUserWidget>(CreateWidget(GetWorld(), CrossHairClass));
+
+		if (CrossHair != nullptr)
+		{
+			CrossHair->AddToViewport();
+		}
 	}
 
 	//Setting the field of view on camera
