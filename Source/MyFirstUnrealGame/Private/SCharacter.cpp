@@ -11,6 +11,7 @@
 #include "SWeapon.h"
 #include "MyFirstUnrealGame\MyFirstUnrealGame.h"
 #include "GenericTeamAgentInterface.h"
+#include "Blueprint/UserWidget.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -32,6 +33,7 @@ ASCharacter::ASCharacter()
 	ZoomedFOV = 65.0f;
 	ZoomInterpSpeed = 20;
 	WeaponAttachSocketName = "WeaponSocket";
+	WeaponIndex = 0;
 }
 
 // Unity's Void Start
@@ -48,13 +50,31 @@ void ASCharacter::BeginPlay()
 		CurrentWeapon = GetWorld()->SpawnActor<ASWeapon>(StarterWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
 		if (CurrentWeapon)
 		{
+			WeaponArray.Add(CurrentWeapon);
 			CurrentWeapon->SetOwner(this);
 			CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponAttachSocketName);
+		}
+		if (ASWeapon* Weapon = GetWorld()->SpawnActor<ASWeapon>(SecondWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams))
+		{
+			Weapon->GetWeaponMesh()->SetHiddenInGame(true);
+			Weapon->SetOwner(this);
+			Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponAttachSocketName);
+			WeaponArray.Add(Weapon);
 		}
 	}
 
 	if (CharacterComp) {
 		CharacterComp->OnHealthChanged.AddDynamic(this, &ASCharacter::OnHealthChanged);
+	}
+
+	if (IsValid(CrossHairClass))
+	{
+		CrossHair = Cast<UUserWidget>(CreateWidget(GetWorld(), CrossHairClass));
+
+		if (CrossHair != nullptr)
+		{
+			CrossHair->AddToViewport();
+		}
 	}
 
 	//Setting the field of view on camera
@@ -147,6 +167,40 @@ void ASCharacter::StopFire()
 	}
 }
 
+void ASCharacter::SwitchNextWeapon()
+{
+	if (CurrentWeapon)
+	{
+		if (WeaponArray.Num() > WeaponIndex + 1)
+		{
+			++WeaponIndex;
+			if (ASWeapon* NextWeapon = WeaponArray[WeaponIndex])
+			{
+				CurrentWeapon ->GetWeaponMesh() -> SetHiddenInGame(true);
+				CurrentWeapon = NextWeapon;
+				CurrentWeapon ->GetWeaponMesh() -> SetHiddenInGame(false);
+			}
+		}
+	}
+}
+
+void ASCharacter::SwitchPreviousWeapon()
+{
+	if (CurrentWeapon)
+	{
+		if (WeaponIndex - 1 >= 0)
+		{
+			--WeaponIndex;
+			if (ASWeapon* NextWeapon = WeaponArray[WeaponIndex])
+			{
+				CurrentWeapon->GetWeaponMesh()->SetHiddenInGame(true);
+				CurrentWeapon = NextWeapon;
+				CurrentWeapon->GetWeaponMesh()->SetHiddenInGame(false);
+			}
+		}
+	}
+}
+
 // This is called when the health value changes
 void ASCharacter::OnHealthChanged(USCharacterComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType,
 	class AController* InstigatedBy, AActor* DamageCauser)
@@ -182,6 +236,8 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction(TEXT("Zoom"), IE_Released, this, &ASCharacter::EndZoom);
 	PlayerInputComponent->BindAction(TEXT("Fire"), IE_Pressed, this, &ASCharacter::StartFire);
 	PlayerInputComponent->BindAction(TEXT("Fire"), IE_Released, this, &ASCharacter::StopFire);
+	PlayerInputComponent->BindAction(TEXT("SwitchNextWeapon"), IE_Pressed, this, &ASCharacter::SwitchNextWeapon);
+	PlayerInputComponent->BindAction(TEXT("SwitchPreviousWeapon"), IE_Pressed, this, &ASCharacter::SwitchPreviousWeapon);
 	PlayerInputComponent->BindAction(TEXT("Jump"), IE_Pressed, this, &ACharacter::Jump);
 }
 
