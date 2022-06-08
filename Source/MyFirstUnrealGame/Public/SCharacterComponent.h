@@ -23,10 +23,10 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(BlueprintReadOnly, Category = "HealthComponent")
-		float Health;
+		float CurrentHealth;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HealthComponent")
-		float DefaultHealth;
+		float FullHealth;
 
 	UFUNCTION()
 		void HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
@@ -39,6 +39,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "CharacterComponent")
 		static bool IsFriendly(AActor* ActorA, AActor* ActorB);
+
+	UFUNCTION(BlueprintPure, Category = "Health")
+		FText GetHealthIntText();
 
 	float GetHealth() const;
 };

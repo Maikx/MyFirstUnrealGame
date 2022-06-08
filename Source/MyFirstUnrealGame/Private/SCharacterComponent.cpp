@@ -6,7 +6,7 @@
 
 USCharacterComponent::USCharacterComponent()
 {
-	DefaultHealth = 100;
+	FullHealth = 100;
 	TeamNum = 1;
 	bIsDead = false;
 }
@@ -23,7 +23,7 @@ void USCharacterComponent::BeginPlay()
 		MyOwner->OnTakeAnyDamage.AddDynamic(this, &USCharacterComponent::HandleTakeAnyDamage);
 	}
 	
-	Health = DefaultHealth;
+	CurrentHealth = FullHealth;
 }
 
 // This is called when the health value changes
@@ -41,13 +41,13 @@ void USCharacterComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damag
 	}
 
 	// Update health clamped
-	Health = FMath::Clamp(Health - Damage, 0.0f, DefaultHealth);
+	CurrentHealth = FMath::Clamp(CurrentHealth - Damage, 0.0f, FullHealth);
 
-	UE_LOG(LogTemp, Log, TEXT("Health Changed: %s"), *FString::SanitizeFloat(Health));
+	UE_LOG(LogTemp, Log, TEXT("Health Changed: %s"), *FString::SanitizeFloat(CurrentHealth));
 
-	bIsDead = Health <= 0.0f;
+	bIsDead = CurrentHealth <= 0.0f;
 
-	OnHealthChanged.Broadcast(this, Health, Damage, DamageType, InstigatedBy, DamageCauser);
+	OnHealthChanged.Broadcast(this, CurrentHealth, Damage, DamageType, InstigatedBy, DamageCauser);
 
 	if (bIsDead)
 	{
@@ -81,6 +81,15 @@ bool USCharacterComponent::IsFriendly(AActor* ActorA, AActor* ActorB)
 
 float USCharacterComponent::GetHealth() const
 {
-	return Health;
+	return CurrentHealth;
+}
+
+FText USCharacterComponent::GetHealthIntText()
+{
+	int32 HP = FMath::RoundHalfFromZero(CurrentHealth / FullHealth * 100);
+	FString HPS = FString::FromInt(HP);
+	FString HealthHUD = HPS + FString(TEXT("%"));
+	FText HPText = FText::FromString(HealthHUD);
+	return HPText;
 }
 

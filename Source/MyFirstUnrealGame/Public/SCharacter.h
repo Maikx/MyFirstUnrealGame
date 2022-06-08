@@ -78,11 +78,17 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Player")
 		float ZoomedFOV;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FOV")
+		float DefaultFOV;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Player", meta = (ClampMin = 0.1, ClampMax = 100))
 		float ZoomInterpSpeed;
 	
 	UPROPERTY(BlueprintReadOnly, Category = "Player")
 		bool bDied;
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Player")
+		bool bWantsToZoom;
 
 	UFUNCTION()
 		void OnHealthChanged(USCharacterComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
@@ -92,9 +98,6 @@ protected:
 	int32 WeaponIndex;
 	TArray<ASWeapon*> WeaponArray;
 
-	bool bWantsToZoom;
-
-	float DefaultFOV;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
