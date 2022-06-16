@@ -30,6 +30,16 @@ ASCharacter::ASCharacter()
 	GetCapsuleComponent()->SetCollisionResponseToChannel(COLLISION_WEAPON, ECR_Ignore);
 	GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
 
+	TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
+	TriggerCapsule->InitCapsuleSize(55.f, 96.0f);
+	TriggerCapsule->SetCollisionProfileName(TEXT("Trigger"));
+	TriggerCapsule->SetupAttachment(RootComponent);
+
+	TriggerCapsule->OnComponentBeginOverlap.AddDynamic(this, &ASCharacter::OnOverlapBegin);
+	TriggerCapsule->OnComponentEndOverlap.AddDynamic(this, &ASCharacter::OnOverlapEnd);
+
+	CurrentDoor = nullptr;
+
 	ZoomedFOV = 65.0f;
 	ZoomInterpSpeed = 20;
 	WeaponAttachSocketName = "WeaponSocket";
@@ -239,6 +249,7 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction(TEXT("SwitchNextWeapon"), IE_Pressed, this, &ASCharacter::SwitchNextWeapon);
 	PlayerInputComponent->BindAction(TEXT("SwitchPreviousWeapon"), IE_Pressed, this, &ASCharacter::SwitchPreviousWeapon);
 	PlayerInputComponent->BindAction(TEXT("Jump"), IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction(TEXT("Action"), IE_Pressed, this, &ASCharacter::OnAction);
 }
 
 FVector ASCharacter::GetPawnViewLocation() const
@@ -249,6 +260,31 @@ FVector ASCharacter::GetPawnViewLocation() const
 	}
 
 	return Super::GetPawnViewLocation();
+}
+
+void ASCharacter::OnAction()
+{
+	if (CurrentDoor)
+	{
+		FVector ForwardVector = CameraComp->GetForwardVector();
+		CurrentDoor->ToggleDoor(ForwardVector);
+	}
+}
+
+void ASCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherActor->GetClass()->IsChildOf(ASDoor::StaticClass()))
+	{
+		CurrentDoor = Cast<ASDoor>(OtherActor);
+	}
+}
+
+void ASCharacter::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
+	{
+		CurrentDoor = nullptr;
+	}
 }
 
 

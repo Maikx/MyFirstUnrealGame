@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "GenericTeamAgentInterface.h"
+#include "SDoor.h"
 #include "SCharacter.generated.h"
 
 class UCameraComponent;
@@ -98,6 +99,11 @@ protected:
 	int32 WeaponIndex;
 	TArray<ASWeapon*> WeaponArray;
 
+	UPROPERTY(VisibleAnywhere, Category = "Trigger Capsule")
+	class UCapsuleComponent* TriggerCapsule;
+
+	void OnAction();
+
 
 public:	
 	virtual void Tick(float DeltaTime) override;
@@ -111,4 +117,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Player")
 		void StopFire();
+
+	class ASDoor* CurrentDoor;
+
+	UFUNCTION()
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 };
