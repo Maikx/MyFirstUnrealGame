@@ -26,6 +26,12 @@ void USCharacterComponent::BeginPlay()
 	CurrentHealth = FullHealth;
 }
 
+float USCharacterComponent::GetHealthPercent() const
+{
+	return CurrentHealth / FullHealth;
+}
+
+
 // This is called when the health value changes
 void USCharacterComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy,
 	AActor* DamageCauser)

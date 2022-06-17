@@ -43,5 +43,8 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Health")
 		FText GetHealthIntText();
 
+	UFUNCTION(BlueprintPure, Category = "Health")
+	float GetHealthPercent() const;
+
 	float GetHealth() const;
 };

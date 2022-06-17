@@ -52,6 +52,9 @@ protected:
 		TSubclassOf<UCameraShakeBase> FireCamShake;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	TEnumAsByte<ECollisionChannel>  TraceChannel;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 		float BaseDamage;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
