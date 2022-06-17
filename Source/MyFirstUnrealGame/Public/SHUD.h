@@ -20,8 +20,6 @@ public:
 
 private:
 
-	class UTexture2D* CrosshairTex;
-
 	UPROPERTY(EditAnywhere, Category = "Health")
 		TSubclassOf<class UUserWidget> HUDWidgetClass;
 

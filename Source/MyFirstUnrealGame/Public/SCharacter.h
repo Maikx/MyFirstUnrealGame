@@ -67,12 +67,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 		TSubclassOf<ASWeapon> SecondWeaponClass;
 
-	UPROPERTY(EditDefaultsOnly, Category = "CrossHair")
-		TSubclassOf<UUserWidget> CrossHairClass;
-
-	UPROPERTY(VisibleInstanceOnly, Category = "RunTime")
-		class UUserWidget* CrossHair;
-
 	UPROPERTY(VisibleDefaultsOnly, Category = "Player")
 		FName WeaponAttachSocketName;
 

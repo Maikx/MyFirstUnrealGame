@@ -77,16 +77,6 @@ void ASCharacter::BeginPlay()
 		CharacterComp->OnHealthChanged.AddDynamic(this, &ASCharacter::OnHealthChanged);
 	}
 
-	if (IsValid(CrossHairClass))
-	{
-		CrossHair = Cast<UUserWidget>(CreateWidget(GetWorld(), CrossHairClass));
-
-		if (CrossHair != nullptr)
-		{
-			CrossHair->AddToViewport();
-		}
-	}
-
 	//Setting the field of view on camera
 	DefaultFOV = CameraComp->FieldOfView;
 }
