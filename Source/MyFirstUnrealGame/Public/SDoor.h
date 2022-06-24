@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "SDoor.generated.h"
 
+class USCharacterComponent;
+
 UCLASS()
 class MYFIRSTUNREALGAME_API ASDoor : public AActor
 {

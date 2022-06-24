@@ -3,6 +3,7 @@
 
 #include "SDoor.h"
 #include "UObject/ConstructorHelpers.h"
+#include "SCharacterComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/BoxComponent.h"
@@ -47,7 +48,6 @@ void ASDoor::BeginPlay()
 	Super::BeginPlay();
 
 	//DrawDebugBox(GetWorld(), GetActorLocation(), BoxComp->GetScaledBoxExtent(), FQuat(GetActorRotation()), FColor::Turquoise, true, -1, 0, 2);
-	
 }
 
 // Called every frame

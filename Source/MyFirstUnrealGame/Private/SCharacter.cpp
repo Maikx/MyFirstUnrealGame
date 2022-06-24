@@ -77,6 +77,9 @@ void ASCharacter::BeginPlay()
 		CharacterComp->OnHealthChanged.AddDynamic(this, &ASCharacter::OnHealthChanged);
 	}
 
+	//Set Same Team Id From CharacterComponent
+	CharacterComp->TeamNum = teamId;
+
 	//Setting the field of view on camera
 	DefaultFOV = CameraComp->FieldOfView;
 }

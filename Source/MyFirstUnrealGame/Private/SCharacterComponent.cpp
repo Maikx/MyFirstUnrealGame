@@ -7,7 +7,6 @@
 USCharacterComponent::USCharacterComponent()
 {
 	FullHealth = 100;
-	TeamNum = 1;
 	bIsDead = false;
 }
 

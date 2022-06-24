@@ -49,7 +49,7 @@ protected:
 	/** Retrieved owner attitude toward given Other object */
 	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Teams")
+	UPROPERTY()
 	uint8 teamId;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
