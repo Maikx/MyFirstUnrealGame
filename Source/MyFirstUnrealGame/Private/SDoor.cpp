@@ -2,11 +2,11 @@
 
 
 #include "SDoor.h"
-#include "UObject/ConstructorHelpers.h"
 #include "SCharacterComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/BoxComponent.h"
+#include "Components/StaticMeshComponent.h"
 
 // Sets default values
 ASDoor::ASDoor()
@@ -21,16 +21,8 @@ ASDoor::ASDoor()
 
 	Door = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Door"));
 	Door->SetupAttachment(RootComponent);
-
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> DoorAsset(TEXT
-	("/Game/Props/SM_Door"));
-
-	if (DoorAsset.Succeeded())
-	{
-		Door->SetStaticMesh(DoorAsset.Object);
-		Door->SetRelativeLocation(FVector(0.0f, 50.0f, -100.0f));
-		Door->SetWorldScale3D(FVector(1.f));
-	}
+	Door->SetRelativeLocation(FVector(0.0f, 50.0f, -100.0f));
+	Door->SetWorldScale3D(FVector(1.f));
 
 	isClosed = true;
 	Opening = false;

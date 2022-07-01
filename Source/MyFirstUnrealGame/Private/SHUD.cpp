@@ -5,14 +5,11 @@
 #include "Engine/Texture2D.h"
 #include "TextureResource.h"
 #include "CanvasItem.h"
-#include "UObject/ConstructorHelpers.h"
 #include "Blueprint/UserWidget.h"
 
 ASHUD::ASHUD()
 {
-	static ConstructorHelpers::FClassFinder<UUserWidget> HUDObj( TEXT
-	("/Game/UI/HUD_UI"));
-	HUDWidgetClass = HUDObj.Class;
+
 }
 
 void ASHUD::DrawHUD()

@@ -31,6 +31,9 @@ public:
 	UFUNCTION()
 	void OpenDoor(float dt);
 
+	//class UStaticMeshComponent* Door;
+
+	UPROPERTY(EditAnywhere, Category = "Mesh Comps")
 	class UStaticMeshComponent* Door;
 
 	UPROPERTY(VisibleAnywhere, Category = "Box Comps")
