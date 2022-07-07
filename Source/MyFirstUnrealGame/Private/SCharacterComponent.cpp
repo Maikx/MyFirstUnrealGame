@@ -4,6 +4,7 @@
 #include "SCharacterComponent.h"
 #include "SGameMode.h"
 
+// Unity's Void Awake
 USCharacterComponent::USCharacterComponent()
 {
 	FullHealth = 100;
@@ -23,11 +24,6 @@ void USCharacterComponent::BeginPlay()
 	}
 	
 	CurrentHealth = FullHealth;
-}
-
-float USCharacterComponent::GetHealthPercent() const
-{
-	return CurrentHealth / FullHealth;
 }
 
 
@@ -84,17 +80,15 @@ bool USCharacterComponent::IsFriendly(AActor* ActorA, AActor* ActorB)
 	return HealthCompA->TeamNum == HealthCompB->TeamNum;
 }
 
+// Returns current health;
 float USCharacterComponent::GetHealth() const
 {
 	return CurrentHealth;
 }
 
-FText USCharacterComponent::GetHealthIntText()
+// Returns current health in %
+float USCharacterComponent::GetHealthPercent() const
 {
-	int32 HP = FMath::RoundHalfFromZero(CurrentHealth / FullHealth * 100);
-	FString HPS = FString::FromInt(HP);
-	FString HealthHUD = HPS + FString(TEXT("%"));
-	FText HPText = FText::FromString(HealthHUD);
-	return HPText;
+	return CurrentHealth / FullHealth;
 }
 

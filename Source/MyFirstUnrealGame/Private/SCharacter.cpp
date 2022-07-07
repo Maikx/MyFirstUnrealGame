@@ -73,6 +73,7 @@ void ASCharacter::BeginPlay()
 		}
 	}
 
+	//This is an event that is called when player gets hit by the enemy
 	if (CharacterComp) {
 		CharacterComp->OnHealthChanged.AddDynamic(this, &ASCharacter::OnHealthChanged);
 	}
@@ -89,45 +90,50 @@ void ASCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//Changing fov when the player uses the zoom
 	float TargetFOV = bWantsToZoom ? ZoomedFOV : DefaultFOV;
 	float NewFOV = FMath::FInterpTo(CameraComp->FieldOfView, TargetFOV, DeltaTime, ZoomInterpSpeed);
 
 	CameraComp->SetFieldOfView(NewFOV);
 }
 
+//Unreal Default Movement
 void ASCharacter::MoveForward(float AxisVal)
 {
 	AddMovementInput(GetActorForwardVector() * AxisVal);
 }
 
+//Unreal Default Movement
 void ASCharacter::MoveRight(float AxisVal)
 {
 	AddMovementInput(GetActorRightVector() * AxisVal);
 }
 
+//Unreal Default Movement
 void ASCharacter::BeginCrouch()
 {
 	Crouch();
 }
 
-
+//Unreal Default Movement
 void ASCharacter::EndCrouch()
 {
 	UnCrouch();
 }
 
+//Turns on the bool when the player zooms (state machine)
 void ASCharacter::BeginZoom()
 {
 	bWantsToZoom = true;
 }
 
-
+//Turns off the bool when the player zooms (state machine)
 void ASCharacter::EndZoom()
 {
 	bWantsToZoom = false;
 }
 
-
+//Uses the variable from blueprint teamId to set the TeamId
 void ASCharacter::SetGenericTeamId(const FGenericTeamId& TeamID)
 {
 
@@ -139,7 +145,7 @@ FGenericTeamId ASCharacter::GetGenericTeamId() const
 	return FGenericTeamId(teamId);
 }
 
-
+//Gives Different Behaviors to the AI depending on the TeamId
 ETeamAttitude::Type ASCharacter::GetTeamAttitudeTowards(const AActor& Other) const
 {
 	const IGenericTeamAgentInterface* OtherTeamAgent = Cast<const IGenericTeamAgentInterface>(&Other);
@@ -153,6 +159,7 @@ ETeamAttitude::Type ASCharacter::GetTeamAttitudeTowards(const AActor& Other) con
 	return  ETeamAttitude::Neutral;
 }
 
+//When Actor uses weapon
 void ASCharacter::StartFire()
 {
 	if (CurrentWeapon)
@@ -161,7 +168,7 @@ void ASCharacter::StartFire()
 	}
 }
 
-
+//When Actor stops using weapon
 void ASCharacter::StopFire()
 {
 	if (CurrentWeapon)
@@ -170,6 +177,7 @@ void ASCharacter::StopFire()
 	}
 }
 
+//Switch To Secondary Weapon
 void ASCharacter::SwitchNextWeapon()
 {
 	if (CurrentWeapon)
@@ -187,6 +195,7 @@ void ASCharacter::SwitchNextWeapon()
 	}
 }
 
+//Switch Back to Primary Weapon
 void ASCharacter::SwitchPreviousWeapon()
 {
 	if (CurrentWeapon)
@@ -245,6 +254,7 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction(TEXT("Action"), IE_Pressed, this, &ASCharacter::OnAction);
 }
 
+//Camera Setup (Player)
 FVector ASCharacter::GetPawnViewLocation() const
 {
 	if (CameraComp)
@@ -255,6 +265,7 @@ FVector ASCharacter::GetPawnViewLocation() const
 	return Super::GetPawnViewLocation();
 }
 
+//Action for the door
 void ASCharacter::OnAction()
 {
 	if (CurrentDoor)
@@ -264,6 +275,7 @@ void ASCharacter::OnAction()
 	}
 }
 
+//Check if Actor is overlapped with the interactable object (Door)
 void ASCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherActor->GetClass()->IsChildOf(ASDoor::StaticClass()))
@@ -272,6 +284,7 @@ void ASCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 	}
 }
 
+//Check if Actor is not overlapped anymore with the interactable object (Door)
 void ASCharacter::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))

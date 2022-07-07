@@ -42,7 +42,7 @@ void ASDoor::BeginPlay()
 	//DrawDebugBox(GetWorld(), GetActorLocation(), BoxComp->GetScaledBoxExtent(), FQuat(GetActorRotation()), FColor::Turquoise, true, -1, 0, 2);
 }
 
-// Called every frame
+// Unity's Void Update
 void ASDoor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -58,6 +58,7 @@ void ASDoor::Tick(float DeltaTime)
 	}
 }
 
+//This is what happens when the door opens
 void ASDoor::OpenDoor(float dt)
 {
 	DoorCurrentRotation = Door->GetRelativeRotation().Yaw;
@@ -76,6 +77,7 @@ void ASDoor::OpenDoor(float dt)
 	}
 }
 
+//This is what happens when the door closes
 void ASDoor::CloseDoor(float dt)
 {
 	DoorCurrentRotation = Door->GetRelativeRotation().Yaw;
@@ -101,6 +103,7 @@ void ASDoor::CloseDoor(float dt)
 	}
 }
 
+//This is used to switch between the two
 void ASDoor::ToggleDoor(FVector ForwardVector)
 {
 	DotP = FVector::DotProduct(BoxComp->GetForwardVector(), ForwardVector);

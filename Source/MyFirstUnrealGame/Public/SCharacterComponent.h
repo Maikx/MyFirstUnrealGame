@@ -41,10 +41,7 @@ public:
 		static bool IsFriendly(AActor* ActorA, AActor* ActorB);
 
 	UFUNCTION(BlueprintPure, Category = "Health")
-		FText GetHealthIntText();
-
-	UFUNCTION(BlueprintPure, Category = "Health")
-	float GetHealthPercent() const;
+		float GetHealthPercent() const;
 
 	float GetHealth() const;
 };

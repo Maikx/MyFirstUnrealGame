@@ -7,27 +7,27 @@
 #include "CanvasItem.h"
 #include "Blueprint/UserWidget.h"
 
-ASHUD::ASHUD()
-{
-
-}
-
 void ASHUD::DrawHUD()
 {
 	Super::DrawHUD();
 }
 
+// Checks which level is currently open
 void ASHUD::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (HUDWidgetClass != nullptr)
-	{
-		CurrentWidget = CreateWidget<UUserWidget>(GetWorld(), HUDWidgetClass);
+	if (GetWorld()->GetName() == "MainMap" && HUDWidgetClass != nullptr)
+		InGameHud();
+}
 
-		if (CurrentWidget)
-		{
-			CurrentWidget->AddToViewport();
-		}
+// This is used to create the ingame hud
+void ASHUD::InGameHud()
+{
+	CurrentWidget = CreateWidget<UUserWidget>(GetWorld(), HUDWidgetClass);
+
+	if (CurrentWidget)
+	{
+		CurrentWidget->AddToViewport();
 	}
 }

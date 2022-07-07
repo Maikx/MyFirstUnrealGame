@@ -12,17 +12,20 @@ class ASHUD : public AHUD
 	GENERATED_BODY()
 	
 public:
-	ASHUD();
 
 	void DrawHUD() override;
 
 	void BeginPlay() override;
 
+protected:
+
+	void InGameHud();
+
 private:
 
-	UPROPERTY(EditAnywhere, Category = "Health")
+	UPROPERTY(EditAnywhere, Category = "InGameWidget")
 		TSubclassOf<class UUserWidget> HUDWidgetClass;
 
-	UPROPERTY(EditAnywhere, Category = "Health")
+	UPROPERTY(EditAnywhere, Category = "CurrentWidget")
 		class UUserWidget* CurrentWidget;
 };
